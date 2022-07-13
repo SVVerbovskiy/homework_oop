@@ -19,6 +19,11 @@ class Student:
         else:
             return 'Ошибка'
 
+    def average_hw(self):
+        pass
+
+
+
 
 class Mentor:
     def __init__(self, name, surname):
@@ -34,11 +39,14 @@ class Lecturer(Mentor):
         count = 0
         for grades_key in self.grades:
             count += len(self.grades[grades_key])
-        self.average_grades = sum(map(sum, self.grades.values())) / count
+        self.average_grades = round((sum(map(sum, self.grades.values())) / count), 2)
         return self.average_grades
 
     def __str__(self):
-        pass
+        res = f'''Имя: {self.name}
+Фамилия: {self.surname}
+Средняя оценка за лекции: {self.average_rating()}'''
+        return res
 
 
 class Reviewer(Mentor):
@@ -84,4 +92,5 @@ print(best_student.grades)
 print(best_lecturer.grades)
 print(reviewer)
 print(best_lecturer.average_rating())
+print(best_lecturer)
 
