@@ -11,7 +11,8 @@ class Student:
         self.finished_course.append(course_name)
 
     def rate_lect(self, lecturer, course, grade):
-        if isinstance(lecturer, Lecturer) and course in self.courses_in_progress and course in lecturer.courses_attached:
+        if isinstance(lecturer,
+                      Lecturer) and course in self.courses_in_progress and course in lecturer.courses_attached:
             if course in lecturer.grades:
                 lecturer.grades[course] += [grade]
             else:
@@ -20,10 +21,22 @@ class Student:
             return 'Ошибка'
 
     def average_hw(self):
-        pass
+        count = 0
+        for grades_key in self.grades:
+            count += len(self.grades[grades_key])
+        self.average_hw = round((sum(map(sum, self.grades.values())) / count), 2)
+        return self.average_hw
 
+    def __lt__(self, other):
+        if not isinstance(other, Student):
+            print('Not a Student!')
+            return
+        return self.average_hw() < other.average_hw()
 
-
+    def __str__(self):
+        res = f'''Имя: {self.name}\nФамилия: {self.surname}\nСредняя оценка за лекции: {self.average_hw()}
+Курсы в процессе изучения: {', '.join(self.courses_in_progress)}\nЗавершенные курсы: {', '.join(self.finished_courses)}'''
+        return res
 
 class Mentor:
     def __init__(self, name, surname):
@@ -42,10 +55,14 @@ class Lecturer(Mentor):
         self.average_grades = round((sum(map(sum, self.grades.values())) / count), 2)
         return self.average_grades
 
+    def __lt__(self, other):
+        if not isinstance(other, Lecturer):
+            print('Not a Lecturer!')
+            return
+        return self.average_rating() < other.average_rating()
+
     def __str__(self):
-        res = f'''Имя: {self.name}
-Фамилия: {self.surname}
-Средняя оценка за лекции: {self.average_rating()}'''
+        res = f'Имя: {self.name}\nФамилия: {self.surname}\nСредняя оценка за лекции: {self.average_rating()}'
         return res
 
 
@@ -60,37 +77,46 @@ class Reviewer(Mentor):
             return 'Ошибка'
 
     def __str__(self):
-        res = f'''Имя: {self.name}
-Фамилия: {self.surname}'''
+        res = f'Имя: {self.name}\nФамилия: {self.surname}'
         return res
 
 
-best_student = Student('Ruoy', 'Eman', 'your_gender')
-best_student.courses_in_progress += ['Python']
-best_student.courses_in_progress += ['Git']
+student_1 = Student('Ruoy', 'Eman', 'man')
+student_1.courses_in_progress += ['Python']
+student_1.courses_in_progress += ['Git']
+
+student_2 = Student('Helen', 'Park', 'woman')
+student_2.courses_in_progress += ['Python']
+student_2.courses_in_progress += ['Git']
 
 reviewer = Reviewer('Some', 'Buddy')
 reviewer.courses_attached += ['Python']
+reviewer.courses_attached += ['Git']
 
-reviewer.rate_hw(best_student, 'Python', 10)
-reviewer.rate_hw(best_student, 'Python', 10)
-reviewer.rate_hw(best_student, 'Python', 10)
+reviewer.rate_hw(student_1, 'Python', 9)
+reviewer.rate_hw(student_1, 'Python', 7)
+reviewer.rate_hw(student_1, 'Python', 8)
+
+reviewer.rate_hw(student_2, 'Python', 10)
+reviewer.rate_hw(student_2, 'Python', 9)
+reviewer.rate_hw(student_2, 'Python', 6)
 
 best_lecturer = Lecturer('Maks', 'Korz')
 best_lecturer.courses_attached += ['Python']
 best_lecturer.courses_attached += ['Git']
 
-best_student.rate_lect(best_lecturer, 'Python', 10)
-best_student.rate_lect(best_lecturer, 'Python', 10)
-best_student.rate_lect(best_lecturer, 'Python', 10)
+student_1.rate_lect(best_lecturer, 'Python', 10)
+student_1.rate_lect(best_lecturer, 'Python', 10)
+student_1.rate_lect(best_lecturer, 'Python', 10)
 
-best_student.rate_lect(best_lecturer, 'Git', 7)
-best_student.rate_lect(best_lecturer, 'Git', 4)
-best_student.rate_lect(best_lecturer, 'Git', 9)
+student_1.rate_lect(best_lecturer, 'Git', 7)
+student_1.rate_lect(best_lecturer, 'Git', 4)
+student_1.rate_lect(best_lecturer, 'Git', 9)
 
-print(best_student.grades)
+print(student_1.grades)
+print(student_2.grades)
 print(best_lecturer.grades)
 print(reviewer)
-print(best_lecturer.average_rating())
 print(best_lecturer)
-
+print(student_1)
+print(student_2)
