@@ -32,7 +32,8 @@ class Student:
 
     def __str__(self):
         res = f'''Имя: {self.name}\nФамилия: {self.surname}\nСредняя оценка за лекции: {self.average_hw()}
-Курсы в процессе изучения: {', '.join(self.courses_in_progress)}\nЗавершенные курсы: {', '.join(self.finished_courses)}'''
+Курсы в процессе изучения: {', '.join(self.courses_in_progress)}
+Завершенные курсы: {', '.join(self.finished_courses)}'''
         return res
 
 
@@ -139,13 +140,23 @@ student_2.rate_lect(lecturer_2, 'Git', 9)
 student_2.rate_lect(lecturer_2, 'Git', 6)
 student_2.rate_lect(lecturer_2, 'Git', 9)
 
+students = [student_1, student_2]
+lecturers = [lecturer_1, lecturer_2]
 
-def average_grade_hw():
-    pass
 
+def average_grade(list, course):
+    grades_all = []
+    for current_student in list:
+        for key, value in current_student.grades.items():
+            if key == 'Python':
+                for grade in value:
+                    grades_all.append(grade)
+    average_grades = round(sum(grades_all) / len(grades_all), 2)
+    if list == students:
+        print(f'Средняя оценка для всех студентов по курсу "Python": {average_grades}')
+    if list == lecturers:
+        print(f'Средняя оценка для всех лекторов по курсу "Python": {average_grades}')
 
-def average_grade_lect():
-    pass
 
 print(student_1)
 print()
@@ -161,3 +172,6 @@ print(lecturer_2)
 print()
 print(student_1 > student_2)
 print(lecturer_1 < lecturer_2)
+print()
+average_grade(students, 'Python')
+average_grade(lecturers, 'Python')
