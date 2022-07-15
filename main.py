@@ -7,9 +7,6 @@ class Student:
         self.courses_in_progress = []
         self.grades = {}
 
-    def add_courses(self, course_name):
-        self.finished_course.append(course_name)
-
     def rate_lect(self, lecturer, course, grade):
         if isinstance(lecturer,
                       Lecturer) and course in self.courses_in_progress and course in lecturer.courses_attached:
@@ -24,8 +21,8 @@ class Student:
         count = 0
         for grades_key in self.grades:
             count += len(self.grades[grades_key])
-        self.average_hw = round((sum(map(sum, self.grades.values())) / count), 2)
-        return self.average_hw
+        self.average_homework = round((sum(map(sum, self.grades.values())) / count), 2)
+        return self.average_homework
 
     def __lt__(self, other):
         if not isinstance(other, Student):
@@ -38,15 +35,20 @@ class Student:
 Курсы в процессе изучения: {', '.join(self.courses_in_progress)}\nЗавершенные курсы: {', '.join(self.finished_courses)}'''
         return res
 
+
 class Mentor:
     def __init__(self, name, surname):
         self.name = name
         self.surname = surname
         self.courses_attached = []
+        self.grades = {}
 
 
 class Lecturer(Mentor):
-    grades = {}
+
+    def __init__(self, name, surname):
+        super().__init__(name, surname)
+        self.average_grades = None
 
     def average_rating(self):
         count = 0
@@ -84,39 +86,78 @@ class Reviewer(Mentor):
 student_1 = Student('Ruoy', 'Eman', 'man')
 student_1.courses_in_progress += ['Python']
 student_1.courses_in_progress += ['Git']
+student_1.finished_courses += ['Вводный курс по программированию']
 
 student_2 = Student('Helen', 'Park', 'woman')
 student_2.courses_in_progress += ['Python']
 student_2.courses_in_progress += ['Git']
+student_2.finished_courses += ['Вводный курс по дизайну']
 
-reviewer = Reviewer('Some', 'Buddy')
-reviewer.courses_attached += ['Python']
-reviewer.courses_attached += ['Git']
+reviewer_1 = Reviewer('Geoffrey', 'Cameron')
+reviewer_1.courses_attached += ['Python']
 
-reviewer.rate_hw(student_1, 'Python', 9)
-reviewer.rate_hw(student_1, 'Python', 7)
-reviewer.rate_hw(student_1, 'Python', 8)
+reviewer_2 = Reviewer('Charles', 'Pitts')
+reviewer_2.courses_attached += ['Git']
 
-reviewer.rate_hw(student_2, 'Python', 10)
-reviewer.rate_hw(student_2, 'Python', 9)
-reviewer.rate_hw(student_2, 'Python', 6)
+reviewer_1.rate_hw(student_1, 'Python', 9)
+reviewer_1.rate_hw(student_1, 'Python', 7)
+reviewer_1.rate_hw(student_1, 'Python', 8)
 
-best_lecturer = Lecturer('Maks', 'Korz')
-best_lecturer.courses_attached += ['Python']
-best_lecturer.courses_attached += ['Git']
+reviewer_1.rate_hw(student_2, 'Python', 10)
+reviewer_1.rate_hw(student_2, 'Python', 9)
+reviewer_1.rate_hw(student_2, 'Python', 6)
 
-student_1.rate_lect(best_lecturer, 'Python', 10)
-student_1.rate_lect(best_lecturer, 'Python', 10)
-student_1.rate_lect(best_lecturer, 'Python', 10)
+reviewer_2.rate_hw(student_1, 'Git', 10)
+reviewer_2.rate_hw(student_1, 'Git', 8)
+reviewer_2.rate_hw(student_1, 'Git', 9)
 
-student_1.rate_lect(best_lecturer, 'Git', 7)
-student_1.rate_lect(best_lecturer, 'Git', 4)
-student_1.rate_lect(best_lecturer, 'Git', 9)
+reviewer_2.rate_hw(student_2, 'Git', 8)
+reviewer_2.rate_hw(student_2, 'Git', 9)
+reviewer_2.rate_hw(student_2, 'Git', 8)
 
-print(student_1.grades)
-print(student_2.grades)
-print(best_lecturer.grades)
-print(reviewer)
-print(best_lecturer)
+lecturer_1 = Lecturer('Maks', 'Korz')
+lecturer_1.courses_attached += ['Python']
+lecturer_1.courses_attached += ['Git']
+
+lecturer_2 = Lecturer('Agnes', 'Stokes')
+lecturer_2.courses_attached += ['Python']
+lecturer_2.courses_attached += ['Git']
+
+student_1.rate_lect(lecturer_1, 'Python', 10)
+student_1.rate_lect(lecturer_1, 'Python', 9)
+student_1.rate_lect(lecturer_1, 'Python', 10)
+
+student_1.rate_lect(lecturer_1, 'Git', 9)
+student_1.rate_lect(lecturer_1, 'Git', 5)
+student_1.rate_lect(lecturer_1, 'Git', 9)
+
+student_2.rate_lect(lecturer_2, 'Python', 9)
+student_2.rate_lect(lecturer_2, 'Python', 8)
+student_2.rate_lect(lecturer_2, 'Python', 10)
+
+student_2.rate_lect(lecturer_2, 'Git', 9)
+student_2.rate_lect(lecturer_2, 'Git', 6)
+student_2.rate_lect(lecturer_2, 'Git', 9)
+
+
+def average_grade_hw():
+    pass
+
+
+def average_grade_lect():
+    pass
+
 print(student_1)
+print()
 print(student_2)
+print()
+print(reviewer_1)
+print()
+print(reviewer_2)
+print()
+print(lecturer_1)
+print()
+print(lecturer_2)
+print()
+print(student_1 > student_2)
+print(lecturer_1 < lecturer_2)
